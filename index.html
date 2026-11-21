@@ -31,7 +31,9 @@ h1 .glow{display:inline-block;margin:0 .12em;color:#ffd6f4;animation:glow 2.6s e
 
 /* Astra's signature sparkles over the whole page, from findastra.github.io (cyber.css, 2026-10-29): four-point
    twinkles in soft pastels, each fading all the way out between twinkles, the whole field drifting round the rainbow */
-.sparkles{position:fixed;inset:0;pointer-events:none;z-index:900;overflow:hidden;animation:rainbow-drift 28s linear infinite}
+/* pinned to the page, not the screen, so they never move when it scrolls or the phone's bar slides (Astra, 2026-11-21) */
+body{position:relative}
+.sparkles{position:absolute;inset:0;pointer-events:none;z-index:900;overflow:hidden;animation:rainbow-drift 28s linear infinite}
 .sparkles i{position:absolute;left:var(--x);top:var(--y);width:var(--s);aspect-ratio:1;translate:-50% -50%;background:var(--c);clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);animation:twinkle 4.8s ease-in-out var(--d) infinite;opacity:0}
 @keyframes twinkle{0%,100%{transform:scale(.2) rotate(0deg);opacity:0}50%{transform:scale(1.15) rotate(45deg);opacity:1}}
 @keyframes rainbow-drift{0%,100%{filter:hue-rotate(-70deg)}50%{filter:hue-rotate(70deg)}}
