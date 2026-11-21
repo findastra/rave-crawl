@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#100d22">
-<title>FIND ASTRA ✦ TONIGHT • Rave Crawl 11.21</title><meta name="description" content="YOOKiE → Hap Hap → Space Banana. Tap the pins for info, tickets and directions.">
-<meta property="og:title" content="FIND ASTRA ✦ TONIGHT · 11.21 RAVE CRAWL"><meta property="og:description" content="YOOKiE → Hap Hap → Space Banana · your live map for Saturday night in Boise.">
+<title>FIND ASTRA ✦ RAVE CRAWL TONIGHT • 11.21</title><meta name="description" content="YOOKiE → Hap Hap → Space Banana. Tap the pins for info, tickets and directions.">
+<meta property="og:title" content="FIND ASTRA ✦ RAVE CRAWL TONIGHT · 11.21"><meta property="og:description" content="YOOKiE → Hap Hap → Space Banana · your live map for Saturday night in Boise.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap">
@@ -16,9 +16,26 @@ body{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:col
 /* Header, centered */
 header{padding:14px 12px 6px;text-align:center}
 header small{font-size:10px;font-weight:900;letter-spacing:.23em;color:#ff9ae5}
-h1{margin:4px 0 3px;font-size:clamp(22px,6vw,40px);line-height:1.1;letter-spacing:-.045em;white-space:nowrap}
+h1{margin:4px 0 3px;font-size:clamp(22px,6vw,40px);line-height:1.1;letter-spacing:-.045em}
+h1 span{white-space:nowrap}
 h1 em{font-style:normal;color:var(--pink)}
+/* the title's sparkle glows and breathes (Astra, 2026-11-21) */
+h1 .glow{display:inline-block;margin:0 .12em;color:#ffd6f4;animation:glow 2.6s ease-in-out infinite}
+@keyframes glow{0%,100%{text-shadow:0 0 4px #fff,0 0 10px #ff49c8,0 0 22px #ff49c8;transform:scale(1)}50%{text-shadow:0 0 6px #fff,0 0 16px #ff49c8,0 0 34px #b45cff,0 0 50px #ff49c8;transform:scale(1.18)}}
 .subtitle{font-size:12px;letter-spacing:.025em;color:#d7c5ef}
+/* FIND ASTRA LIVE: opens Astra's Google live-location link; hidden when there is no link or after LIVE.ends */
+.live{display:inline-flex;align-items:center;gap:7px;margin-top:9px;padding:7px 16px;border-radius:40px;background:linear-gradient(110deg,#ec37b5,#873cff);color:#fff;font-weight:900;font-size:13px;letter-spacing:.14em;text-decoration:none;box-shadow:0 0 14px rgba(255,73,200,.55)}
+.live[hidden]{display:none}
+.live i{width:9px;height:9px;border-radius:50%;background:#66f5dc;box-shadow:0 0 8px #66f5dc;animation:ping 1.6s ease-in-out infinite}
+@keyframes ping{50%{opacity:.35;transform:scale(.7)}}
+
+/* Astra's signature sparkles over the whole page, from findastra.github.io (cyber.css, 2026-10-29): four-point
+   twinkles in soft pastels, each fading all the way out between twinkles, the whole field drifting round the rainbow */
+.sparkles{position:fixed;inset:0;pointer-events:none;z-index:900;overflow:hidden;animation:rainbow-drift 28s linear infinite}
+.sparkles i{position:absolute;left:var(--x);top:var(--y);width:var(--s);aspect-ratio:1;translate:-50% -50%;background:var(--c);clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);animation:twinkle 4.8s ease-in-out var(--d) infinite;opacity:0}
+@keyframes twinkle{0%,100%{transform:scale(.2) rotate(0deg);opacity:0}50%{transform:scale(1.15) rotate(45deg);opacity:1}}
+@keyframes rainbow-drift{0%,100%{filter:hue-rotate(-70deg)}50%{filter:hue-rotate(70deg)}}
+@media (prefers-reduced-motion:reduce){.sparkles,.sparkles i,h1 .glow,.live i{animation:none}.sparkles i{opacity:.7}}
 
 /* Phones: map, then the stops. iPad and wider: map square on the left, stops beside it. */
 .stage{flex:1;padding:8px 8px 14px}
@@ -94,7 +111,8 @@ h1 em{font-style:normal;color:var(--pink)}
  .footer-star img{width:36px;height:36px}
 }
 </style></head><body>
-<header><small>NOV 21, 2026 · BOISE!</small><h1>FIND ASTRA ✦ <em>TONIGHT</em></h1><div class="subtitle">YOOKiE → HAP HAP → SPACE BANANA → KARMA</div></header>
+<header><small>NOV 21, 2026 · BOISE!</small><h1><span>FIND ASTRA</span> <span class="glow" aria-hidden="true">✦</span> <span><em>RAVE CRAWL TONIGHT</em></span></h1><div class="subtitle">YOOKiE → HAP HAP → SPACE BANANA → KARMA</div><a class="live" id="live" hidden target="_blank" rel="noopener"><i aria-hidden="true"></i>FIND ASTRA LIVE</a></header>
+<div class="sparkles" id="sparkles" aria-hidden="true"></div>
 <div class="stage"><div class="pair">
 <div class="mapbox"><div id="map" role="region" aria-label="Walking route map: 01 YOOKiE and 02 Hap Hap at 722 W Broad St, then 03 Space Banana, then 04 Karma"></div>
 <div class="layers" role="group" aria-label="Map style"><button type="button" data-layer="city" aria-pressed="true">CITY</button><button type="button" data-layer="irl" aria-pressed="false">IRL</button></div></div>
@@ -114,6 +132,21 @@ h1 em{font-style:normal;color:var(--pink)}
 </footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// FIND ASTRA LIVE: Astra's Google live-location link share from her Android (Find Hub), until Sunday night.
+// The button shows only while there is a link and before `ends` (Sun Nov 22, 11:59 PM Mountain); Google ends the share then too.
+const LIVE={url:"",ends:"2026-11-23T06:59:00Z"};
+(()=>{const a=document.getElementById("live");
+ const on=()=>/^https:\/\/(maps\.app\.goo\.gl|(www\.)?google\.com|goo\.gl)\//.test(LIVE.url)&&Date.now()<Date.parse(LIVE.ends);
+ const tick=()=>{if(on()){a.href=LIVE.url;a.hidden=false}else{a.hidden=true;a.removeAttribute("href")}};
+ tick();setInterval(tick,60000);})();
+
+// Signature sparkles (findastra.github.io cyber.js): hashed places and sizes, pastel in every hue, staggered twinkles.
+(()=>{const box=document.getElementById("sparkles");
+ const hash=s=>{let h=2166136261;for(const ch of s)h=Math.imul(h^ch.codePointAt(0),16777619);return h>>>0};
+ for(let i=0;i<46;i++){const k=hash("rave-crawl:"+i),h=n=>hash(n+":"+k),el=document.createElement("i"),s=h("s")%7===0?14+h("b")%6:5+h("b")%7;
+  el.style.cssText=`--x:${(1+h("x")%980/10).toFixed(1)}%;--y:${(1+h("y")%980/10).toFixed(1)}%;--s:${s}px;--d:${(h("d")%48)/10}s;--c:hsl(${h("c")%360} 55% 80%)`;
+  box.append(el)}})();
+
 // Stops and the walking route: OpenStreetMap address points and OSM foot routing (routing.openstreetmap.de), 2026-11-21.
 const stops=[
  {n:"01",c:"#ff49c8",name:"YOOKiE at Treefort",lat:43.6131247,lng:-116.2045404,side:"left"},
