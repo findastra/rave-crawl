@@ -93,8 +93,10 @@ body{position:relative}
 @media (max-width:420px){.stop{padding:calc(8px * var(--k))}}
 
 /* Astra's unified footer, as on findastra.github.io, always on one line */
-.foot{position:relative;padding:24px var(--wrap) 12px;background:#000;color:var(--ink);text-align:center;font-size:14px}
-.foot::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:repeating-conic-gradient(#4a4a4a 0 25%,#000 0 50%) 0 0/10px 10px}
+.foot{position:relative;padding:24px var(--wrap) 24px;background:#000;color:var(--ink);text-align:center;font-size:14px}
+.foot::before,.foot::after{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:repeating-conic-gradient(#4a4a4a 0 25%,#000 0 50%) 0 0/10px 10px}
+/* a second finish-line stripe under the footer, matching the one above (Astra, 2026-11-21) */
+.foot::after{top:auto;bottom:0}
 .astra-footer .footer-line{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:0 18px}
 .astra-footer .footer-group{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:0 10px}
 .footer-group::before,.footer-sparkle{content:"✦";color:#d994c6;font-size:12px;line-height:1;margin-right:8px}
@@ -108,7 +110,7 @@ body{position:relative}
 .footer-star{display:block;flex:none;line-height:0}
 .footer-star img{width:48px;height:48px}
 @media(max-width:520px){
- .foot{padding:16px 10px 10px}
+ .foot{padding:16px 10px 16px}
  .astra-footer .footer-line{gap:0 8px}
  .astra-footer .footer-group{gap:0 6px}
  .astra-footer .footer-title{font-size:12px}
