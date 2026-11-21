@@ -2,53 +2,73 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#100d22">
 <title>BOISE AFTER DARK • Rave Crawl 11.21</title><meta name="description" content="YOOKiE → Hap Hap → Space Banana. Tap the pins for info, tickets and directions.">
 <meta property="og:title" content="BOISE AFTER DARK ✦ 11.21 RAVE CRAWL"><meta property="og:description" content="YOOKiE → Hap Hap → Space Banana · your live map for Saturday night in Boise.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap">
 <style>
-/* Bungee numerals, as in the Anthropic IPO guide */
+/* Bungee numerals, as in the Anthropic IPO guide: the same on the cards and the map */
 @font-face{font-family:Blk;src:url(fonts/bungee-latin-400-normal.woff2) format("woff2");font-display:swap}
-:root{color-scheme:dark;--bg:#100d22;--pink:#ff49c8;--text:#f7f2ff;--muted:#b7accb;--card:#1b1530;--line:#43345e;--btn:#261b3f;--c1:#ff49c8;--c2:#f2ff3d;--c3:#66f5dc;--c4:#aeb5ff;--mono:"JetBrains Mono",ui-monospace,monospace;--ink:#f2f2f2;--wrap:max(20px,calc((100% - 1140px) / 2))}
+:root{color-scheme:dark;--bg:#100d22;--pink:#ff49c8;--text:#f7f2ff;--muted:#b7accb;--card:#1b1530;--line:#43345e;--c1:#ff49c8;--c2:#f2ff3d;--c3:#66f5dc;--c4:#aeb5ff;--gap:14px;--mono:"JetBrains Mono",ui-monospace,monospace;--ink:#f2f2f2;--wrap:max(20px,calc((100% - 1140px) / 2))}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,sans-serif}
-a{color:#ffbaf0}
-button,.button{appearance:none;border:1px solid #5b3f76;border-radius:9px;background:var(--btn);color:#fff;font:800 14px/1.2 system-ui,-apple-system,sans-serif;cursor:pointer;text-decoration:none}
-.primary{background:linear-gradient(110deg,#ec37b5,#873cff);border:none}
+html{background:var(--bg)}
+body{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,sans-serif}
 
-/* Phones: stacked. Tablets and wider: map and stops side by side. */
-.layout{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr)}
-header{padding:13px 12px 7px}
+/* Header, centered */
+header{padding:14px 12px 6px;text-align:center}
 header small{font-size:10px;font-weight:900;letter-spacing:.23em;color:#ff9ae5}
-.title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-h1{margin:4px 0 5px;min-width:0;font-size:clamp(20px,5.5vw,36px);line-height:1.15;letter-spacing:-.045em;white-space:nowrap}
+h1{margin:4px 0 3px;font-size:clamp(22px,6vw,40px);line-height:1.1;letter-spacing:-.045em;white-space:nowrap}
 h1 em{font-style:normal;color:var(--pink)}
-.share-top{flex:none;padding:8px 13px;font-size:13px}
 .subtitle{font-size:12px;letter-spacing:.025em;color:#d7c5ef}
-.mapwrap{width:min(calc(100% - 20px),440px);margin:8px auto 10px}
-.find-astra{display:flex;align-items:center;justify-content:center;margin-bottom:7px;padding:11px 8px;letter-spacing:.17em;font-weight:950}
-#map{display:block;width:100%;aspect-ratio:1/1;min-height:270px;border:1px solid #6c4c8b;border-radius:14px;background:#251838}
-.status{margin-top:9px;color:#b9eaff;font-size:13px}.status:empty{display:none}
-main{min-width:0;padding:2px 12px 24px}
 
-/* Stop cards */
-.stop{display:grid;grid-template-columns:38px minmax(0,1fr);gap:9px;margin:9px 0;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:13px}
-.num{font-family:Blk,system-ui,sans-serif;font-size:20px;line-height:1.25;color:var(--c)}
-.stop h2{margin:0;font-size:19px;line-height:1.25;letter-spacing:-.03em}
-.open{display:inline-block;margin-left:4px;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.08em;vertical-align:2px}
-.when{margin-top:2px;color:#ffa5e4;font-size:13px;font-weight:850}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
-.tag{padding:3px 8px;border:1px solid #5d4b71;border-radius:40px;color:#e5d9f4;font-size:12px}
-.stop p{margin:4px 0;color:#d9cce8;font-size:13px}
-.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.links a{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:36px;padding:7px 11px;border:1px solid #69567f;border-radius:10px;color:#fff;font-size:13px;font-weight:700;line-height:1.2;text-decoration:none;white-space:nowrap}
-.links a.tickets{background:var(--pink);border-color:var(--pink);color:#16051e}
+/* The two squares: map and the four stops */
+.stage{flex:1;padding:8px 10px 14px}
+.pair{display:flex;flex-direction:column;align-items:center;gap:var(--gap)}
+.mapbox{position:relative;width:min(100%,440px);aspect-ratio:1/1;flex:none}
+#map{position:absolute;inset:0;border:1px solid #6c4c8b;border-radius:14px;overflow:hidden;background:#1a1430}
+.stops{width:min(100%,560px);display:grid;gap:8px}
 
-@media(min-width:760px){
- .layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"head head" "map stops";column-gap:20px;padding:0 20px}
- header{grid-area:head;padding:18px 0 4px}
- .mapwrap{grid-area:map;position:sticky;top:12px;align-self:start;width:auto;margin:10px 0 24px}
- main{grid-area:stops;padding:1px 0 24px}
- .stop{grid-template-columns:44px minmax(0,1fr)}
- .stop:first-child{margin-top:10px}
+/* Map: city colors tinted to the page, numerals like the cards */
+.leaflet-container{background:#1a1430;font:12px system-ui,-apple-system,sans-serif}
+.city-tiles{filter:sepia(1) hue-rotate(215deg) saturate(2.4) brightness(1.05)}
+.pin{background:none;border:0}
+.pin-num{display:block;font-family:Blk,system-ui,sans-serif;font-size:20px;line-height:24px;color:var(--c);text-align:center;text-shadow:0 0 2px #100d22,0 0 2px #100d22,0 0 3px #100d22,0 0 8px rgba(16,13,34,.95)}
+.leaflet-tooltip.pin-tip{background:#1b1230;border:1px solid #8b6bb0;color:#fff;font:700 12px system-ui,-apple-system,sans-serif;box-shadow:0 2px 8px #0008}
+.leaflet-tooltip-top.pin-tip:before{border-top-color:#8b6bb0}
+.leaflet-control-attribution{background:rgba(16,13,34,.75)!important;color:#b7accb!important;font-size:9px!important}
+.leaflet-control-attribution a{color:#e5d9f4!important}
+.layers{position:absolute;left:10px;bottom:10px;z-index:500;display:flex;overflow:hidden;border:1px solid #6c4c8b;border-radius:9px;background:rgba(16,13,34,.88)}
+.layers button{appearance:none;border:0;padding:6px 11px;background:transparent;color:#d7c5ef;font:800 11px/1.2 system-ui,-apple-system,sans-serif;letter-spacing:.12em;cursor:pointer}
+.layers button[aria-pressed="true"]{background:linear-gradient(110deg,#ec37b5,#873cff);color:#fff}
+
+/* Stop cards: name and FIND ASTRA HERE the same size, different colors */
+.stop{display:grid;grid-template-columns:40px minmax(0,1fr);align-content:center;gap:8px;padding:6px 10px;background:var(--card);border:1px solid var(--line);border-radius:12px;min-width:0}
+.num{font-family:Blk,system-ui,sans-serif;font-size:20px;line-height:26px;color:var(--c)}
+.info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.row1{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}
+.name,.when{font-size:15px;line-height:1.3}
+.name{color:var(--text);font-weight:800;letter-spacing:-.01em;text-decoration:underline;text-decoration-color:rgba(247,242,255,.35);text-underline-offset:3px}
+.name:hover,.name:focus-visible{text-decoration-color:currentColor}
+.open{color:var(--muted);font-size:10.5px;font-weight:800;letter-spacing:.06em}
+.dir{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:2px 9px;border:1px solid #69567f;border-radius:9px;color:#fff;font-size:11.5px;font-weight:700;text-decoration:none;white-space:nowrap}
+.when{color:#ffa5e4;font-weight:850}
+.tags{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.tag{padding:1px 7px;border:1px solid #5d4b71;border-radius:40px;color:#e5d9f4;font-size:11px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:2px 9px;border:1px solid #69567f;border-radius:9px;color:#fff;font-size:11.5px;font-weight:700;text-decoration:none;white-space:nowrap}
+.btn.tickets{background:var(--pink);border-color:var(--pink);color:#16051e}
+.note{margin:0;color:#d9cce8;font-size:12px;line-height:1.35}
+
+/* Big enough screens: the page fills the screen with two squares of at least 440px, side by side when the space is
+   wider than tall and stacked when it is taller than wide. Smaller tablets and phones scroll as one column. */
+@media (min-width:934px) and (min-height:650px),(min-width:480px) and (min-height:1104px){
+ body{height:100vh;height:100dvh}
+ .stage{min-height:0;container-type:size;padding:6px 20px 12px}
+ .pair{height:100%;justify-content:center}
+ .mapbox,.stops{--sq:min(100cqw,calc((100cqh - var(--gap)) / 2));width:var(--sq);height:var(--sq);aspect-ratio:auto}
+ .stops{overflow:auto;grid-template-rows:repeat(4,minmax(min-content,1fr));gap:6px}
+ @container (orientation:landscape){
+  .pair{flex-direction:row}
+  .mapbox,.stops{--sq:min(calc((100cqw - var(--gap)) / 2),100cqh)}
+ }
 }
 
 /* Astra's unified footer, the same as on findastra.github.io */
@@ -78,18 +98,17 @@ main{min-width:0;padding:2px 12px 24px}
  .footer-star img{width:40px;height:40px}
 }
 </style></head><body>
-<div class="layout">
-<header><small>NOV 21 · BOISE</small><div class="title-row"><h1>BOISE <em>AFTER DARK</em> ✦</h1><button id="share" class="share-top">↗ Share</button></div><div class="subtitle">YOOKiE → HAP HAP → SPACE BANANA → KARMA</div></header>
-<div class="mapwrap"><a class="button primary find-astra" href="https://findastra.github.io/" target="_blank" rel="noopener">✦ FIND ASTRA</a>
-<iframe id="map" title="Google Maps walking route: YOOKiE, Hap Hap, Space Banana, Karma" src="https://maps.google.com/maps?output=embed&amp;dirflg=w&amp;saddr=722+W+Broad+St%2C+Boise%2C+ID&amp;daddr=816+W+Bannock+St%2C+Boise%2C+ID+to%3A800+W+Idaho+St%2C+Boise%2C+ID" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<div id="status" class="status" aria-live="polite"></div></div>
-<main>
-<section class="stop" style="--c:var(--c1)"><div class="num">01</div><div><h2>YOOKiE at Treefort</h2><div class="when">FIND ASTRA HERE: 11:00–11:30 PM</div><div class="tags"><span class="tag">Dubstep / heavy bass</span><span class="tag">18+</span><span class="tag">Ticket required</span></div><p><b>Full event: 7:30 PM–1:30 AM</b> (doors 7:30 PM). 722 W Broad St · Flowstate, Cxlxradx, DRTY, Thermo.</p><div class="links"><a class="tickets" href="https://www.eventim.us/event/yookie/709465" target="_blank" rel="noopener">🎟 Get YOOKiE Tickets</a><a href="https://treefortmusichall.com/shows/yookie/" target="_blank" rel="noopener">Show info</a><a class="directions" data-i="0" target="_blank" rel="noopener">↗ Directions</a><a class="gmaps" data-i="0" target="_blank" rel="noopener">📍 Google Maps</a><a class="street" data-i="0" target="_blank" rel="noopener">◉ Street View</a></div></div></section>
-<section class="stop" style="--c:var(--c2)"><div class="num">02</div><div><h2>Hap Hap Rooftop</h2><div class="when">FIND ASTRA HERE: 11:30 PM–12:00 AM</div><div class="tags"><span class="tag">Boogie Nights: Whitney Houston</span><span class="tag">FREE</span><span class="tag">21+</span></div><p>722 W Broad St · Upstairs from Treefort. DJs jilly.FM and kg.lin.</p><div class="links"><a href="https://treefortmusichall.com/hap-hap/" target="_blank" rel="noopener">Venue + menu</a><a href="https://stayhappening.com/e/boogie-nights-whitney-houston-E2IT02EE730" target="_blank" rel="noopener">Party info</a><a class="directions" data-i="1" target="_blank" rel="noopener">↗ Directions</a><a class="gmaps" data-i="1" target="_blank" rel="noopener">📍 Google Maps</a><a class="street" data-i="1" target="_blank" rel="noopener">◉ Street View</a></div></div></section>
-<section class="stop" style="--c:var(--c3)"><div class="num">03</div><div><h2>Space Banana</h2><div class="when">FIND ASTRA HERE: 12:30–1:00 AM</div><div class="tags"><span class="tag">Underground electronic / DJs</span><span class="tag">Saturday until 2 AM</span><span class="tag">Tonight's lineup unconfirmed</span></div><p>816 W Bannock St #102 · Alley entrance near 8th &amp; Jefferson.</p><div class="links"><a href="https://www.space-banana.com/" target="_blank" rel="noopener">Venue + info</a><a class="directions" data-i="2" target="_blank" rel="noopener">↗ Directions</a><a class="gmaps" data-i="2" target="_blank" rel="noopener">📍 Google Maps</a><a class="street" data-i="2" target="_blank" rel="noopener">◉ Street View</a></div></div></section>
-<section class="stop" style="--c:var(--c4)"><div class="num">04</div><div><h2>Karma <span class="open">OPEN 9:00 PM–2:00 AM</span></h2><div class="when">FIND ASTRA HERE: 1:00 AM–2:00 AM</div><div class="tags"><span class="tag">Dance club</span></div><p>800 W Idaho St, upstairs · Entrance on 8th Street.</p><div class="links"><a href="https://clubkarmaboise.com/" target="_blank" rel="noopener">Club info</a><a class="directions" data-i="3" target="_blank" rel="noopener">↗ Directions</a><a class="gmaps" data-i="3" target="_blank" rel="noopener">📍 Google Maps</a></div></div></section>
+<header><small>NOV 21, 2026 · BOISE!</small><h1>BOISE <em>AFTER DARK</em> ✦</h1><div class="subtitle">YOOKiE → HAP HAP → SPACE BANANA → KARMA</div></header>
+<div class="stage"><div class="pair">
+<div class="mapbox"><div id="map" role="region" aria-label="Walking route map: 01 YOOKiE and 02 Hap Hap at 722 W Broad St, then 03 Space Banana, then 04 Karma"></div>
+<div class="layers" role="group" aria-label="Map style"><button type="button" data-layer="city" aria-pressed="true">CITY</button><button type="button" data-layer="irl" aria-pressed="false">IRL</button></div></div>
+<main class="stops">
+<section class="stop" style="--c:var(--c1)"><div class="num">01</div><div class="info"><div class="row1"><a class="name" href="https://treefortmusichall.com/shows/yookie/" target="_blank" rel="noopener">YOOKiE at Treefort</a><span class="open">OPEN 7:30 PM–1:30 AM</span><a class="dir" data-i="0" target="_blank" rel="noopener">Directions ↗</a></div><div class="when">FIND ASTRA HERE: 11:00–11:30 PM</div><div class="tags"><span class="tag">Dubstep / heavy bass</span><span class="tag">18+</span><span class="tag">Ticket required</span><a class="btn tickets" href="https://www.eventim.us/event/yookie/709465" target="_blank" rel="noopener">🎟 Get Tickets</a></div><p class="note">Flowstate · Cxlxradx · DRTY · Thermo</p></div></section>
+<section class="stop" style="--c:var(--c2)"><div class="num">02</div><div class="info"><div class="row1"><a class="name" href="https://treefortmusichall.com/hap-hap/" target="_blank" rel="noopener">Hap Hap Rooftop</a><a class="dir" data-i="1" target="_blank" rel="noopener">Directions ↗</a></div><div class="when">FIND ASTRA HERE: 11:30 PM–12:00 AM</div><div class="tags"><span class="tag">Boogie Nights: Whitney Houston</span><span class="tag">FREE</span><span class="tag">21+</span><a class="btn" href="https://stayhappening.com/e/boogie-nights-whitney-houston-E2IT02EE730" target="_blank" rel="noopener">Party info</a></div><p class="note">Upstairs from Treefort. DJs jilly.FM and kg.lin.</p></div></section>
+<section class="stop" style="--c:var(--c3)"><div class="num">03</div><div class="info"><div class="row1"><a class="name" href="https://www.space-banana.com/" target="_blank" rel="noopener">Space Banana</a><a class="dir" data-i="2" target="_blank" rel="noopener">Directions ↗</a></div><div class="when">FIND ASTRA HERE: 12:30–1:00 AM</div><div class="tags"><span class="tag">EDM</span></div></div></section>
+<section class="stop" style="--c:var(--c4)"><div class="num">04</div><div class="info"><div class="row1"><a class="name" href="https://clubkarmaboise.com/" target="_blank" rel="noopener">Karma</a><span class="open">OPEN 9:00 PM–2:00 AM</span><a class="dir" data-i="3" target="_blank" rel="noopener">Directions ↗</a></div><div class="when">FIND ASTRA HERE: 1:00 AM–2:00 AM</div><div class="tags"><span class="tag">Dance club</span></div></div></section>
 </main>
-</div>
+</div></div>
 <footer class="foot dark astra-footer" aria-label="By Astra and her links">
 <div class="footer-line">
 <div class="footer-group footer-by"><span class="footer-title">By Astra</span></div>
@@ -97,13 +116,43 @@ main{min-width:0;padding:2px 12px 24px}
 <div class="footer-group footer-more"><span class="footer-title">Find Out More</span><span class="footer-icons"><a target="_blank" rel="noopener" href="https://github.com/findastra" title="GitHub: Astra" aria-label="GitHub: Astra"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.77-.24.77-.54v-2.09c-3.14.68-3.8-1.33-3.8-1.33-.51-1.3-1.25-1.65-1.25-1.65-1.02-.7.08-.68.08-.68 1.13.08 1.73 1.16 1.73 1.16 1 1.73 2.63 1.23 3.27.94.1-.73.4-1.23.71-1.51-2.51-.29-5.15-1.26-5.15-5.58 0-1.23.44-2.24 1.16-3.03-.12-.29-.5-1.43.11-2.98 0 0 .95-.3 3.08 1.16A10.7 10.7 0 0 1 12 6.12c.95 0 1.9.13 2.8.38 2.14-1.46 3.08-1.16 3.08-1.16.61 1.55.23 2.69.11 2.98.72.79 1.16 1.8 1.16 3.03 0 4.33-2.65 5.29-5.17 5.57.41.35.77 1.03.77 2.08v3.09c0 .3.2.65.78.54A11.2 11.2 0 0 0 12 .8Z"/></svg></a></span></div>
 </div>
 </footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const places=[{name:"Treefort Music Hall",address:"722 W Broad St, Boise, ID 83702",lat:43.61213,lng:-116.20320},{name:"Hap Hap",address:"722 W Broad St, Boise, ID 83702",lat:43.61213,lng:-116.20320},{name:"Space Banana",address:"816 W Bannock St #102, Boise, ID 83702",lat:43.61773,lng:-116.20399},{name:"Karma",address:"800 W Idaho St, Boise, ID 83702",lat:43.61658,lng:-116.20378}];
-function directions(i){return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(places[i].address)+"&travelmode=walking"}
-function street(i){return "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint="+places[i].lat+"%2C"+places[i].lng}
-function placeLink(i){return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(places[i].name+" Boise Idaho")}
-document.querySelectorAll(".directions").forEach(el=>el.href=directions(+el.dataset.i));
-document.querySelectorAll(".gmaps").forEach(el=>el.href=placeLink(+el.dataset.i));
-document.querySelectorAll(".street").forEach(el=>el.href=street(+el.dataset.i));
-document.getElementById("share").onclick=async()=>{const url="https://findastra.github.io/rave-crawl/";if(navigator.share){try{await navigator.share({url});return}catch(err){if(err.name==="AbortError")return}}try{await navigator.clipboard.writeText(url);document.getElementById("status").textContent="Crawl link copied — paste into a message"}catch(err){prompt("Copy crawl link:",url)}};
+// Stops and the walking route: OpenStreetMap address points and OSM foot routing (routing.openstreetmap.de), 2026-11-21.
+const stops=[
+ {n:"01",c:"#ff49c8",name:"YOOKiE at Treefort",address:"722 W Broad St, Boise, ID 83702",lat:43.6131247,lng:-116.2045404,side:"left"},
+ {n:"02",c:"#f2ff3d",name:"Hap Hap Rooftop",address:"722 W Broad St, Boise, ID 83702",lat:43.6131247,lng:-116.2045404,side:"right"},
+ {n:"03",c:"#66f5dc",name:"Space Banana",address:"816 W Bannock St #102, Boise, ID 83702",lat:43.6177845,lng:-116.2023412},
+ {n:"04",c:"#aeb5ff",name:"Karma",address:"800 W Idaho St, Boise, ID 83702",lat:43.6167292,lng:-116.2028474}];
+const route=[[43.613064,-116.204419],[43.613472,-116.204023],[43.613956,-116.20495],[43.614007,-116.205055],[43.614023,-116.205039],[43.614105,-116.204955],[43.614168,-116.204892],[43.614182,-116.204861],[43.614723,-116.204336],[43.614877,-116.204196],[43.615062,-116.204013],[43.615546,-116.203554],[43.615569,-116.203531],[43.615617,-116.203485],[43.615675,-116.20343],[43.615697,-116.203409],[43.616308,-116.202824],[43.616336,-116.202798],[43.616392,-116.202744],[43.61644,-116.2027],[43.616462,-116.202679],[43.616771,-116.202392],[43.617082,-116.202104],[43.617136,-116.202215],[43.617162,-116.20219],[43.617218,-116.202133],[43.617258,-116.202092],[43.617287,-116.20206],[43.617588,-116.201771],[43.617848,-116.20228],[43.617588,-116.201771],[43.617287,-116.20206],[43.617258,-116.202092],[43.617218,-116.202133],[43.617162,-116.20219],[43.617136,-116.202215],[43.617082,-116.202104],[43.616771,-116.202392],[43.616462,-116.202679],[43.616607,-116.202965]];
+const directions=s=>"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(s.address)+"&travelmode=walking";
+document.querySelectorAll(".dir").forEach(a=>a.href=directions(stops[+a.dataset.i]));
+
+if(window.L){
+ const map=L.map("map",{zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:!L.Browser.mobile,keyboard:false,zoomSnap:.25,zoomDelta:.5});
+ L.control.attribution({prefix:false,position:"bottomright"}).addTo(map);
+ const carto="© <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> © <a href=\"https://carto.com/attributions\">CARTO</a>";
+ const city=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{subdomains:"abcd",maxZoom:20,className:"city-tiles",attribution:carto});
+ const irl=L.layerGroup([
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:20,maxNativeZoom:19,attribution:"Imagery © Esri"}),
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",{subdomains:"abcd",maxZoom:20,attribution:carto})]);
+ city.addTo(map);
+ L.polyline(route,{color:"#8b5cf6",weight:10,opacity:.4,lineCap:"round",lineJoin:"round",interactive:false}).addTo(map);
+ L.polyline(route,{color:"#ff49c8",weight:4,opacity:.95,lineCap:"round",lineJoin:"round",interactive:false}).addTo(map);
+ stops.forEach(s=>{
+  L.circleMarker([s.lat,s.lng],{radius:5,color:"#100d22",weight:2,fillColor:s.c,fillOpacity:1,interactive:false}).addTo(map);
+  const anchor=s.side==="left"?[48,30]:s.side==="right"?[-4,30]:[22,32];
+  const icon=L.divIcon({className:"pin",html:'<span class="pin-num" style="--c:'+s.c+'">'+s.n+"</span>",iconSize:[44,24],iconAnchor:anchor});
+  L.marker([s.lat,s.lng],{icon,keyboard:false,alt:s.n+" "+s.name}).addTo(map).bindTooltip(s.name,{direction:"top",offset:[s.side==="left"?-26:s.side==="right"?26:0,-30],className:"pin-tip"});
+ });
+ const bounds=L.latLngBounds(route);stops.forEach(s=>bounds.extend([s.lat,s.lng]));
+ const fit=()=>{map.invalidateSize();map.fitBounds(bounds,{paddingTopLeft:[30,46],paddingBottomRight:[30,40]})};
+ fit();
+ if(window.ResizeObserver)new ResizeObserver(fit).observe(document.getElementById("map"));
+ document.querySelectorAll(".layers button").forEach(b=>b.onclick=()=>{
+  const toIrl=b.dataset.layer==="irl";
+  map.removeLayer(toIrl?city:irl);(toIrl?irl:city).addTo(map);
+  document.querySelectorAll(".layers button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+ });
+}
 </script></body></html>
