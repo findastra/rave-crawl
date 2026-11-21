@@ -29,7 +29,7 @@ h1 em{font-style:normal;color:var(--pink)}
 
 /* Map: city colors tinted to the page, numerals like the cards */
 .leaflet-container{background:#1a1430;font:12px system-ui,-apple-system,sans-serif}
-.city-tiles{filter:sepia(1) hue-rotate(215deg) saturate(2.4) brightness(1.05)}
+.city-tiles{filter:invert(1) grayscale(1) sepia(1) hue-rotate(215deg) saturate(2.2) brightness(.78) contrast(1.15)}
 .pin{background:none;border:0}
 .pin-num{display:block;font-family:Blk,system-ui,sans-serif;font-size:20px;line-height:24px;color:var(--c);text-align:center;text-shadow:0 0 2px #100d22,0 0 2px #100d22,0 0 3px #100d22,0 0 8px rgba(16,13,34,.95)}
 .leaflet-tooltip.pin-tip{background:#1b1230;border:1px solid #8b6bb0;color:#fff;font:700 12px system-ui,-apple-system,sans-serif;box-shadow:0 2px 8px #0008}
@@ -131,11 +131,9 @@ document.querySelectorAll(".dir").forEach(a=>a.href=directions(stops[+a.dataset.
 if(window.L){
  const map=L.map("map",{zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:!L.Browser.mobile,keyboard:false,zoomSnap:.25,zoomDelta:.5});
  L.control.attribution({prefix:false,position:"bottomright"}).addTo(map);
- const carto="© <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> © <a href=\"https://carto.com/attributions\">CARTO</a>";
- const city=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{subdomains:"abcd",maxZoom:20,className:"city-tiles",attribution:carto});
- const irl=L.layerGroup([
-  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:20,maxNativeZoom:19,attribution:"Imagery © Esri"}),
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png",{subdomains:"abcd",maxZoom:20,attribution:carto})]);
+ // CITY: OpenStreetMap's map, shaded to the page's purple by .city-tiles. IRL: Esri satellite imagery. Neither needs a key.
+ const city=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:20,maxNativeZoom:19,className:"city-tiles",attribution:"© <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>"});
+ const irl=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:20,maxNativeZoom:19,attribution:"Imagery © Esri"});
  city.addTo(map);
  L.polyline(route,{color:"#8b5cf6",weight:10,opacity:.4,lineCap:"round",lineJoin:"round",interactive:false}).addTo(map);
  L.polyline(route,{color:"#ff49c8",weight:4,opacity:.95,lineCap:"round",lineJoin:"round",interactive:false}).addTo(map);
