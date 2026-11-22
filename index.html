@@ -16,8 +16,13 @@ body{margin:0;min-height:100vh;min-height:100dvh;display:flex;flex-direction:col
 /* Header, centered */
 header{padding:14px 12px 6px;text-align:center}
 header small{font-size:10px;font-weight:900;letter-spacing:.23em;color:#ff9ae5}
-h1{margin:4px 0 3px;font-size:clamp(22px,6vw,40px);line-height:1.1;letter-spacing:-.045em}
-h1 span{white-space:nowrap}
+h1{margin:4px 0 3px;font-size:40px;line-height:1.1;letter-spacing:-.045em;white-space:nowrap}
+/* one line when it fits at 28px or more; otherwise FIND ASTRA | big star | RAVE CRAWL TONIGHT, two lines each (Astra, 2026-11-21) */
+h1.split{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;line-height:1.02}
+h1.split .side>span{display:block}
+h1.split .l{text-align:right}
+h1.split .r{text-align:left}
+h1.split .glow{font-size:2.3em;margin:0 .14em;line-height:1}
 h1 em{font-style:normal;color:var(--pink)}
 /* the title's sparkle glows and breathes (Astra, 2026-11-21) */
 h1 .glow{display:inline-block;margin:0 .12em;color:#ffd6f4;animation:glow 2.6s ease-in-out infinite}
@@ -74,6 +79,7 @@ body{position:relative}
 .top{grid-area:top;display:flex;flex-direction:column;align-items:flex-start;min-width:0}
 .rest{grid-area:rest;display:flex;flex-direction:column;gap:calc(5px * var(--k));min-width:0}
 .times{grid-area:times;justify-self:end;display:grid;grid-template-columns:auto calc(134px * var(--k));align-items:baseline;gap:calc(2px * var(--k)) calc(8px * var(--k))}
+/* OPEN and FIND ASTRA right aligned, the times left aligned: they meet on one line (Astra, 2026-11-21) */
 .lbl{text-align:right;font-size:calc(15px * var(--k));font-weight:850;line-height:1.3;letter-spacing:.01em;white-space:nowrap}
 .lbl.open{color:var(--muted)}
 .lbl.mine{color:var(--mine)}
@@ -119,13 +125,13 @@ body{position:relative}
  .footer-star img{width:36px;height:36px}
 }
 </style></head><body>
-<header><small>NOV 21, 2026 · BOISE!</small><h1><span>FIND ASTRA</span> <span class="glow" aria-hidden="true">✦</span> <span><em>RAVE CRAWL TONIGHT</em></span></h1><div class="subtitle">YOOKiE → HAP HAP → SPACE BANANA → KARMA</div><a class="live" id="live" hidden target="_blank" rel="noopener"><i aria-hidden="true"></i>FIND ASTRA LIVE</a></header>
+<header><small>NOV 21, 2026 · BOISE!</small><h1 id="title"><span class="side l"><span>FIND</span> <span>ASTRA</span></span> <span class="glow" aria-hidden="true">✦</span> <em class="side r"><span>RAVE CRAWL</span> <span>TONIGHT</span></em></h1><div class="subtitle">YOOKiE → HAP HAP → SPACE BANANA → KARMA</div><a class="live" id="live" hidden target="_blank" rel="noopener"><i aria-hidden="true"></i>FIND ASTRA LIVE</a></header>
 <div class="sparkles" id="sparkles" aria-hidden="true"></div>
 <div class="stage"><div class="pair">
 <div class="mapbox"><div id="map" role="region" aria-label="Walking route map: 01 YOOKiE and 02 Hap Hap at 722 W Broad St, then 03 Space Banana, then 04 Karma"></div>
 <div class="layers" role="group" aria-label="Map style"><button type="button" data-layer="city" aria-pressed="true">CITY</button><button type="button" data-layer="irl" aria-pressed="false">IRL</button></div></div>
 <main class="stops">
-<section class="stop" style="--c:var(--c1)"><div class="num">01</div><div class="top"><a class="name" href="https://treefortmusichall.com/shows/yookie/" target="_blank" rel="noopener">YOOKiE at Treefort</a><span class="lineup">Flowstate · Cxlxradx · DRTY · Thermo</span></div><div class="times"><span class="lbl open">OPEN</span><span class="t open">7:30 PM–1:30 AM</span><span class="lbl mine">FIND ASTRA</span><span class="t mine">9:00–11:30 PM</span></div><div class="rest"><div class="tags"><span class="tag">Music venue</span><span class="tag">Dubstep / heavy bass</span><span class="tag age">18+</span><a class="btn tickets" href="https://www.eventim.us/event/yookie/709465" target="_blank" rel="noopener">🎟 Get Tickets</a></div></div></section>
+<section class="stop" style="--c:var(--c1)"><div class="num">01</div><div class="top"><a class="name" href="https://treefortmusichall.com/shows/yookie/" target="_blank" rel="noopener">YOOKiE at Treefort</a><span class="lineup">Flowstate · Cxlxradx · DRTY · Thermo</span></div><div class="times"><span class="lbl open">OPEN</span><span class="t open">7:30 PM–1:30 AM</span><span class="lbl mine">FIND ASTRA</span><span class="t mine">9:00–11:30 PM</span></div><div class="rest"><div class="tags"><span class="tag">Music venue</span><span class="tag">Dubstep / heavy bass</span><span class="tag age">18+</span><a class="btn tickets" href="https://www.eventim.us/event/yookie/709465" target="_blank" rel="noopener">🎟 Tickets</a></div></div></section>
 <section class="stop" style="--c:var(--c2)"><div class="num">02</div><div class="top"><a class="name" href="https://treefortmusichall.com/hap-hap/" target="_blank" rel="noopener">Hap Hap Rooftop</a></div><div class="times"><span class="lbl open">OPEN</span><span class="t open">4:00 PM–2:00 AM</span><span class="lbl mine">FIND ASTRA</span><span class="t mine">11:30 PM–12:00 AM</span></div><div class="rest"><div class="tags"><span class="tag">Cocktail bar</span><span class="tag">Boogie Nights: Whitney Houston</span><span class="tag">FREE</span><span class="tag age">21+</span><a class="btn" href="https://stayhappening.com/e/boogie-nights-whitney-houston-E2IT02EE730" target="_blank" rel="noopener">Party info</a></div><p class="note">Upstairs from Treefort. DJs jilly.FM and kg.lin.</p></div></section>
 <section class="stop" style="--c:var(--c3)"><div class="num">03</div><div class="top"><a class="name" href="https://www.space-banana.com/" target="_blank" rel="noopener">Space Banana</a></div><div class="times"><span class="lbl open">OPEN</span><span class="t open">8:00 PM–2:00 AM</span><span class="lbl mine">FIND ASTRA</span><span class="t mine">12:30–1:00 AM</span></div><div class="rest"><div class="tags"><span class="tag">Cocktail bar</span><span class="tag">EDM</span><span class="tag age">21+</span></div></div></section>
 <section class="stop" style="--c:var(--c4)"><div class="num">04</div><div class="top"><a class="name" href="https://clubkarmaboise.com/" target="_blank" rel="noopener">Karma</a></div><div class="times"><span class="lbl open">OPEN</span><span class="t open">9:00 PM–2:00 AM</span><span class="lbl mine">FIND ASTRA</span><span class="t mine">1:00 AM–2:00 AM</span></div><div class="rest"><div class="tags"><span class="tag">Dance club</span><span class="tag">Arcade</span><span class="tag age">21+</span></div></div></section>
@@ -142,6 +148,13 @@ body{position:relative}
 <script>
 // FIND ASTRA LIVE: Astra's Google live-location link share from her Android (Find Hub), until Sunday night.
 // The button shows only while there is a link and before `ends` (Sun Nov 22, 11:59 PM Mountain); Google ends the share then too.
+// title: one line at the biggest size up to 40px that fits; under 28px it splits into two lines each side
+(()=>{const h=document.getElementById("title");
+ const fit=()=>{const w=h.parentElement.clientWidth-24;h.classList.remove("split");h.style.fontSize="40px";
+  let f=Math.min(40,40*w/h.scrollWidth);
+  if(f<28){h.classList.add("split");h.style.fontSize="40px";f=Math.min(40,40*w/h.scrollWidth)}
+  h.style.fontSize=Math.floor(f)+"px"};
+ fit();addEventListener("resize",fit);document.fonts&&document.fonts.ready.then(fit);})();
 const LIVE={url:"",ends:"2026-11-23T06:59:00Z"};
 (()=>{const a=document.getElementById("live");
  const on=()=>/^https:\/\/(maps\.app\.goo\.gl|(www\.)?google\.com|goo\.gl)\//.test(LIVE.url)&&Date.now()<Date.parse(LIVE.ends);
